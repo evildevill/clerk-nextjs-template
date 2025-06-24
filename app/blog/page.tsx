@@ -10,7 +10,7 @@ export default function Blog() {
         <div className="flex min-h-screen flex-col items-center justify-center p-24">
           <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
           <p className="mt-2 text-lg text-gray-700">
-            This page is only available to users on the <strong>You're Awesome</strong> plan.
+            This page is only available to users on the <strong>You are Awesome</strong> plan.
           </p>
             <p className="mt-4 text-sm text-gray-500">
                 Upgrade your plan to access the blog content.

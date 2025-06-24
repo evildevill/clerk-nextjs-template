@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { PricingTable } from "@clerk/nextjs";
 
 export default function Home() {
   return (
@@ -7,13 +7,10 @@ export default function Home() {
       <p className="mt-4 text-lg">
         This is a template for building applications with Clerk authentication.
       </p>
-      <Image
-        src="/vercel.svg"
-        alt="Clerk Logo"
-        width={200}
-        height={100}
-        className="mt-8"
-      />
+
+      <div className="mt-8 w-full">
+        <PricingTable />
+      </div>
     </main>
   );
 }

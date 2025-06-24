@@ -4,9 +4,15 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { LoginLink, LogoutLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
 import LoadingBar from "react-top-loading-bar"
 import { Menu, Moon, Sun, LogIn, LogOut, ChevronRight } from "lucide-react"
+import { 
+  useUser,
+  useClerk,
+  SignInButton,
+  SignOutButton,
+  UserButton
+} from "@clerk/nextjs"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +31,8 @@ import Image from "next/image"
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme()
-  const { user, isAuthenticated, isLoading } = useKindeBrowserClient()
+  const { user, isSignedIn, isLoaded } = useUser()
+  const { signOut } = useClerk()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -64,7 +71,7 @@ export default function Navbar() {
   // Determine if a link should be prefetched
   const shouldPrefetch = (path: string) => {
     // Only prefetch if not the current page and not in a loading state
-    return pathname !== path && !isLoading
+    return pathname !== path && !isLoaded
   }
 
   return (
@@ -99,7 +106,7 @@ export default function Navbar() {
             <NavLink href="/vu-study-material" label="VU Study Material" currentPath={pathname} prefetch={shouldPrefetch("/vu-study-material")} />
             <NavLink href="/store" label="Store" currentPath={pathname} prefetch={shouldPrefetch("/store")} />
 
-            {isAuthenticated && (
+            {isSignedIn && (
               <NavLink
                 href="/dashboard"
                 label="Dashboard"
@@ -122,25 +129,31 @@ export default function Navbar() {
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </Button>
 
-            {isLoading ? (
+            {!isLoaded ? (
               <div className="h-9 w-24 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-            ) : isAuthenticated ? (
+            ) : isSignedIn ? (
               <div className="flex items-center gap-3">
-                <UserButton user={user} />
-                <LogoutLink>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                  </Button>
-                </LogoutLink>
+                <UserButton 
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-8 w-8",
+                      userButtonPopoverCard: "dark:bg-slate-900 dark:border-slate-800"
+                    }
+                  }}
+                />
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => signOut()}>
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
               </div>
             ) : (
-              <LoginLink>
+              <SignInButton mode="modal">
                 <Button size="sm" className="gap-2 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-500">
                   <LogIn className="h-4 w-4" />
                   <span>Sign Up</span>
                 </Button>
-              </LoginLink>
+              </SignInButton>
             )}
           </div>
 
@@ -209,7 +222,7 @@ export default function Navbar() {
                     onClick={() => setIsDrawerOpen(false)}
                   />
 
-                  {isAuthenticated && (
+                  {isSignedIn && (
                     <MobileNavLink
                       href="/dashboard"
                       label="Dashboard"
@@ -220,36 +233,38 @@ export default function Navbar() {
                 </div>
 
                 <DrawerFooter className="mt-2">
-                  {isLoading ? (
+                  {!isLoaded ? (
                     <div className="h-10 animate-pulse rounded-md bg-slate-200 dark:bg-slate-800" />
-                  ) : isAuthenticated ? (
+                  ) : isSignedIn ? (
                     <div className="grid gap-3">
                       <div className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 dark:border-slate-800">
                         <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-700">
-                          <AvatarImage src={user?.picture || ""} alt={user?.given_name || "User"} />
-                          <AvatarFallback>{user?.given_name?.charAt(0) || "U"}</AvatarFallback>
+                          <AvatarImage src={user?.imageUrl} alt={user?.firstName || "User"} />
+                          <AvatarFallback>
+                            {(user?.firstName?.charAt(0)) || "U"}
+                          </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 truncate">
                           <p className="text-sm font-medium">
-                            {user?.given_name} {user?.family_name}
+                            {user?.firstName} {user?.lastName}
                           </p>
-                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
+                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                            {user?.primaryEmailAddress?.emailAddress}
+                          </p>
                         </div>
                       </div>
-                      <LogoutLink>
-                        <Button className="w-full gap-2">
-                          <LogOut className="h-4 w-4" />
-                          <span>Logout</span>
-                        </Button>
-                      </LogoutLink>
+                      <Button className="w-full gap-2" onClick={() => signOut()}>
+                        <LogOut className="h-4 w-4" />
+                        <span>Logout</span>
+                      </Button>
                     </div>
                   ) : (
-                    <LoginLink>
+                    <SignInButton mode="modal">
                       <Button className="w-full gap-2 bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500">
                         <LogIn className="h-4 w-4" />
                         <span>Sign Up</span>
                       </Button>
-                    </LoginLink>
+                    </SignInButton>
                   )}
                   <DrawerClose asChild>
                     <Button variant="outline">Close</Button>
@@ -325,18 +340,5 @@ function MobileNavLink({
         <Badge className="ml-auto mr-2 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">Active</Badge>
       )}
     </Link>
-  )
-}
-
-// User button component
-function UserButton({ user }: { user: { picture?: string; given_name?: string; family_name?: string } }) {
-  return (
-    <div className="flex items-center gap-2">
-      <Avatar className="h-8 w-8 border border-slate-200 dark:border-slate-700">
-        <AvatarImage src={user?.picture || ""} alt={user?.given_name || "User"} />
-        <AvatarFallback>{user?.given_name?.charAt(0) || "U"}</AvatarFallback>
-      </Avatar>
-      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{user?.given_name || "User"}</span>
-    </div>
   )
 }

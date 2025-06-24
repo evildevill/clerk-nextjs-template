@@ -103,7 +103,6 @@ export default function Navbar() {
             <NavLink href="/resume" label="Resume" currentPath={pathname} prefetch={shouldPrefetch("/resume")} />
             <NavLink href="/blog" label="Blog" currentPath={pathname} prefetch={shouldPrefetch("/blog")} />
             <NavLink href="/contact" label="Contact" currentPath={pathname} prefetch={shouldPrefetch("/contact")} />
-            <NavLink href="/vu-study-material" label="VU Study Material" currentPath={pathname} prefetch={shouldPrefetch("/vu-study-material")} />
             <NavLink href="/store" label="Store" currentPath={pathname} prefetch={shouldPrefetch("/store")} />
 
             {isSignedIn && (
@@ -206,12 +205,6 @@ export default function Navbar() {
                   <MobileNavLink
                     href="/contact"
                     label="Contact"
-                    currentPath={pathname}
-                    onClick={() => setIsDrawerOpen(false)}
-                  />
-                  <MobileNavLink
-                    href="/vu-study-material"
-                    label="VU Study Material"
                     currentPath={pathname}
                     onClick={() => setIsDrawerOpen(false)}
                   />

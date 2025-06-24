@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Clerk Next.js Template
+
+A modern, production-ready Next.js template featuring authentication with Clerk, beautiful UI with shadcn/ui, and full Tailwind CSS support. This template is designed for SaaS, dashboards, and web apps that need robust authentication, a clean design system, and rapid customization.
+
+## Features
+
+- **Authentication**: Seamless user management and session handling with [Clerk](https://clerk.com/)
+- **UI Components**: Built with [shadcn/ui](https://ui.shadcn.com/) (Button, Badge, Avatar, Drawer, etc.)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) and [tw-animate-css](https://github.com/justinmahar/tw-animate-css) for utility-first, animated, and responsive design
+- **Theming**: Light/dark mode with [next-themes](https://github.com/pacocoursey/next-themes)
+- **TypeScript**: Strict, modern TS config for safety and DX
+- **App Router**: Uses Next.js 15+ `/app` directory and server components
+- **Pricing Table**: Example pricing table with Clerk integration
+- **Protected Routes**: Middleware-protected dashboard and blog
+- **Responsive Navbar**: Desktop/mobile navigation with user menu
+- **Custom Fonts**: [Geist](https://vercel.com/font) for a clean, modern look
+
+## Project Structure
+
+```
+app/
+  layout.tsx         # Root layout with ClerkProvider, ThemeProvider, Navbar
+  page.tsx           # Home page with pricing table
+  dashboard/page.tsx # User dashboard (protected, shows user/session info)
+  blog/page.tsx      # Blog (protected, plan-based access)
+  globals.css        # Tailwind and custom styles
+components/
+  navbar.tsx         # Responsive navigation bar
+  theme-provider.tsx # Theme context
+  PricingTable/      # Pricing table component
+  ui/                # shadcn/ui components (button, badge, avatar, drawer)
+lib/
+  utils.ts           # Utility functions
+public/
+  logo.png           # App logo
+```
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Configure Clerk**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   - Create a Clerk project at [clerk.com](https://clerk.com/)
+   - Set your Clerk keys in `.env.local` (see Clerk docs)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Run the development server**
 
-## Learn More
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Open your app**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   Visit [http://localhost:3000](http://localhost:3000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Customization
 
-## Deploy on Vercel
+- Edit `app/page.tsx`, `app/dashboard/page.tsx`, and `app/blog/page.tsx` to change content and logic
+- Add or modify shadcn/ui components in `components/ui/`
+- Update Tailwind config and styles in `app/globals.css`
+- Use the Navbar for navigation and user actions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy easily to [Vercel](https://vercel.com/) or any platform supporting Next.js 15+ and environment variables.
+
+## License
+
+MIT

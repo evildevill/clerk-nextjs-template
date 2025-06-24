@@ -10,7 +10,6 @@ import {
   useUser,
   useClerk,
   SignInButton,
-  SignOutButton,
   UserButton
 } from "@clerk/nextjs"
 

@@ -1,4 +1,4 @@
-import { PricingTable } from "@clerk/nextjs";
+import PricingTable from "@/components/PricingTable/pricing-table";
 
 export default function Home() {
   return (
@@ -7,25 +7,7 @@ export default function Home() {
       <p className="mt-4 text-lg">
         This is a template for building applications with Clerk authentication.
       </p>
-
-      <div className="mt-8 w-full">
-        <PricingTable
-          appearance={
-            {
-              elements: {
-                headerTitle: "Choose Your Plan",
-                headerSubtitle: "Select a plan that suits your needs",
-                ctaButton: {
-                  text: "Get Started",
-                },
-              },
-              variables: {
-                colorPrimary: "#4F46E5",
-              },
-            }
-          }
-        />
-      </div>
+      <PricingTable />
     </main>
   );
 }
